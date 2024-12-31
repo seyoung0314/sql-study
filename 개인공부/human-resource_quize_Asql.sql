@@ -115,7 +115,7 @@ select * from departments;
 select 
     e.first_name
     ,e.last_name
---    ,e.manager_id
+    ,e.manager_id
     ,m.first_name as manager_first
     ,e.last_name as manager_last
 from employees e
@@ -163,11 +163,43 @@ from employees ;
 
 -- 12. 직무별 급여가 가장 높은 직원
 -- 각 직무별로 급여가 가장 높은 직원의 job_id, first_name, last_name, salary를 조회하세요.
--- (문제 설명)
+
+select 
+    job_id
+    ,first_name
+    ,last_name
+    ,salary
+     ,rank() over(PARTITION BY job_id ORDER BY salary) as rank
+     FROM employees
+;
+
+select 
+    job_id
+    ,first_name
+    ,last_name
+    ,salary
+from (SELECT
+        job_id
+        ,first_name
+        ,last_name
+        ,salary
+        ,rank() over(PARTITION BY job_id ORDER BY salary) as rank
+        FROM employees)
+where rank =1
+;
 
 -- 13. 부서별 급여 상위 3명
 -- 각 부서별로 급여가 높은 상위 3명의 직원 정보를 조회하세요.
--- (문제 설명)
+
+-- 서브 쿼리를 사용할 땐 컬럼을 명시적으로 모두 작성해야함 * 로 한번에 못가져옴
+SELECT *
+FROM (
+    SELECT 
+        department_id, first_name, last_name, salary,
+        RANK() OVER (PARTITION BY job_id ORDER BY salary) AS rank
+    FROM employees
+) 
+WHERE rank < 4;
 
 -- 14. 직원 직무 변경 정보 조회
 -- 직원들이 직무를 변경한 기록을 조회하세요. (직원의 이전 직무는 job_history 테이블에 저장되어 있습니다.)
@@ -196,3 +228,14 @@ from employees ;
 -- 20. 10년 이상 근무한 직원 조회
 -- 입사일이 10년 이상 된 직원들의 employee_id, first_name, last_name, hire_date를 조회하세요.
 -- (문제 설명)
+
+
+
+
+
+SELECT
+*
+FROM employees e
+natural join departments d
+--on e.department_id = d.department_id
+;
