@@ -27,6 +27,15 @@ CREATE TABLE post_images
 
 
 select * from posts;
+select * from post_images;
+
+select 
+	p.*
+    ,i.* 
+from posts p 
+left join post_images i
+on p.id = i.post_id
+;
 
 -- ==============
 -- 해시태그 테이블
