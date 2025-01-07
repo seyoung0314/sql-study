@@ -58,6 +58,22 @@ CREATE TABLE post_hashtags
     UNIQUE KEY unique_post_hashtag (post_id, hashtag_id)
 );
 
+select * from hashtags;
+select * from post_hashtags;
+
+SELECT
+	 p.name
+	, COUNT(ph.post_id) feed_count
+FROM post_hashtags ph
+RIGHT OUTER JOIN hashtags p
+ON ph.hashtag_id = p.id
+WHERE p.name LIKE '%'
+GROUP BY p.name
+ORDER BY feed_count DESC
+LIMIT 3
+;
+
+
 -- 인덱스 추가
 CREATE INDEX idx_hashtag_name ON hashtags (name);
 CREATE INDEX idx_post_hashtags_post_id ON post_hashtags (post_id);
